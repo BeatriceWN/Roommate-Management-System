@@ -57,3 +57,27 @@ def delete_roommate(id):
 
     roommate.delete()
     click.echo(f"Deleted roommate '{roommate.name}' successfully.")
+
+"""Chore Commands"""
+
+@cli_menu.command()
+@click.option('--title', prompt='Chore title')
+@click.option('--roommate_id', prompt='Assign to roommate ID', type=int)
+def add_chore(title, roommate_id):
+    """Add a new chore"""
+    title = title.strip()
+    if not title:
+        click.echo("Chore title cannot be empty.")
+        return
+
+    roommate = Roommate.find_by_id(roommate_id)
+    if not roommate:
+        click.echo(f"No roommate found with ID {roommate_id}.")
+        return
+
+    try:
+        chore = Chore(title=title, roommate_id=roommate_id)
+        chore.save()
+        click.echo(f"Chore '{title}' added to roommate '{roommate.name}'.")
+    except ValueError as e:
+        click.echo(f"Error: {e}")    
