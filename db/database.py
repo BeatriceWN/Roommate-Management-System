@@ -48,11 +48,6 @@ def create_tables():
         )
     """)
 
-    # Optional indexes
-    CURSOR.execute("CREATE INDEX IF NOT EXISTS idx_chores_roommate_id ON chores(roommate_id);")
-    CURSOR.execute("CREATE INDEX IF NOT EXISTS idx_roommate_bills_bill_id ON roommate_bills(bill_id);")
-    CURSOR.execute("CREATE INDEX IF NOT EXISTS idx_roommate_bills_roommate_id ON roommate_bills(roommate_id);")
-
     CONN.commit()
 
 if __name__ == "__main__":
