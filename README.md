@@ -240,4 +240,3 @@ Total Amount Due Across All Roommates: 0
 
 **Beatrice Wambui**
 [GitHub](https://github.com/BeatriceWN/Roommate-Management-System)
-
