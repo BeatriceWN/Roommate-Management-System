@@ -213,3 +213,47 @@ def mark_bill():
 
     RoommateBill.update_status(roommate_id, bill_id, status.lower())
     click.echo(f"Updated bill ID {bill_id} for roommate ID {roommate_id} to '{status.lower()}'.")
+
+@cli_menu.command()
+def summary():
+    """Show system overview"""
+    roommates = Roommate.all()
+    chores = Chore.all()
+    bills = Bill.all()
+
+    click.echo("Roommate Management System Summary\n")
+    
+    click.echo(f"Total Roommates: {len(roommates)}")
+    if roommates:
+        for r in roommates:
+            click.echo(f" - ID {r.id}: {r.name} | Room: {r.room_number}")
+    else:
+        click.echo("No roommates registered.\n")
+
+    click.echo(f"\nTotal Chores: {len(chores)}")
+    if chores:
+        for c in chores:
+            roommate = Roommate.find_by_id(c.roommate_id)
+            roommate_name = roommate.name if roommate else "Unassigned"
+            click.echo(f" - ID {c.id}: {c.title} | Assigned to: {roommate_name} | Status: {'complete' if c.completed else 'pending'}")
+    else:
+        click.echo("No chores registered.\n")
+
+    click.echo(f"\nTotal Bills: {len(bills)}")
+    if bills:
+        for bill in bills:
+            roommate_bills = RoommateBill.all_for_bill(bill.id)
+            total_shares = sum(rb.share for rb in roommate_bills) if roommate_bills else 0
+            click.echo(f"\nBill ID {bill.id}: {bill.name} | Amount: {bill.amount} | Due: {bill.due_date or 'N/A'} | Total Collected: {total_shares}")
+            if roommate_bills:
+                for rb in roommate_bills:
+                    roommate = Roommate.find_by_id(rb.roommate_id)
+                    roommate_name = roommate.name if roommate else "Unknown"
+                    click.echo(f"   - {roommate_name}: {rb.share} ({rb.status})")
+            else:
+                click.echo("   No roommates assigned to this bill.")
+    else:
+        click.echo("No bills registered.\n")
+
+    total_due = sum(rb.share for bill in bills for rb in RoommateBill.all_for_bill(bill.id))
+    click.echo(f"\nTotal Amount Due Across All Roommates: {total_due}")
