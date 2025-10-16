@@ -169,3 +169,24 @@ def add_bill():
         click.echo(f"Bill '{bill.name}' added and split equally: each roommate owes {share}.")
     except ValueError as e:
         click.echo(f"{e}")
+
+@cli_menu.command()
+def view_bills():
+    """View all bills and roommate payment statuses"""
+    bills = Bill.all()
+    if not bills:
+        click.echo("No bills found.")
+        return
+
+    click.echo("\nBills Overview:")
+    for bill in bills:
+        click.echo(f"\nBill ID {bill.id}: {bill.name} | Amount: {bill.amount} | Due: {bill.due_date or 'N/A'}")
+        roommate_bills = RoommateBill.all_for_bill(bill.id)
+        if not roommate_bills:
+            click.echo("   No roommates assigned to this bill.")
+            continue
+
+        for rb in roommate_bills:
+            roommate = Roommate.find_by_id(rb.roommate_id)
+            roommate_name = roommate.name if roommate else "Unknown"
+            click.echo(f"   - {roommate_name}: {rb.share} ({rb.status})")        
