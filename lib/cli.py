@@ -125,3 +125,47 @@ def delete_chore(id):
 
     chore.delete()
     click.echo(f"Deleted chore '{chore.title}' successfully.")   
+
+"""Bill Commands"""
+
+@cli_menu.command()
+def add_bill():
+    """Add a new bill, one-time or recurring, and split equally among roommates."""
+    name = click.prompt("Bill name").strip()
+    if not name:
+        click.echo("Bill name cannot be empty.")
+        return
+
+    try:
+        amount = float(click.prompt("Total amount"))
+    except ValueError:
+        click.echo("Amount must be a number.")
+        return
+
+    due_date = click.prompt("Due date (optional)", default="", show_default=False).strip()
+    recurrence_type = click.prompt("Is this a recurring bill? (monthly/none)", default="none").lower().strip()
+    recurrence_day = None
+
+    if recurrence_type == "monthly":
+        try:
+            recurrence_day = int(click.prompt("Enter day of month due (1-31)"))
+            if not (1 <= recurrence_day <= 31):
+                raise ValueError
+        except ValueError:
+            click.echo("Day of month must be an integer between 1 and 31.")
+            return
+
+    bill = Bill(
+        name=name,
+        amount=amount,
+        due_date=due_date or None,
+        recurrence_type=recurrence_type if recurrence_type != "none" else None,
+        recurrence_day=recurrence_day
+    )
+    bill.save()
+
+    try:
+        share = bill.split_among_roommates()
+        click.echo(f"Bill '{bill.name}' added and split equally: each roommate owes {share}.")
+    except ValueError as e:
+        click.echo(f"{e}")
