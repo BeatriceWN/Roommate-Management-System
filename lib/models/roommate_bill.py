@@ -29,7 +29,7 @@ class RoommateBill:
         self.id = CURSOR.lastrowid
         return self
 
-@classmethod
+    @classmethod
     def update_status(cls, roommate_id, bill_id, new_status):
         if new_status not in cls.VALID_STATUSES:
             raise ValueError(f"Status must be one of {cls.VALID_STATUSES}")
@@ -53,3 +53,7 @@ class RoommateBill:
         if not row:
             return None
         return cls(id=row[0], roommate_id=row[1], bill_id=row[2], share=row[3], status=row[4])
+
+    def delete(self):
+        CURSOR.execute("DELETE FROM roommate_bills WHERE id=?", (self.id,))
+        CONN.commit()
