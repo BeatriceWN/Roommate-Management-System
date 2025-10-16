@@ -95,4 +95,22 @@ def view_chores():
         roommate = Roommate.find_by_id(c.roommate_id)
         roommate_name = roommate.name if roommate else "Unassigned"
         click.echo(f" - ID {c.id}: {c.title} | Assigned to: {roommate_name} | Status: {'complete' if c.completed else 'pending'}")
-                
+
+@cli_menu.command()
+@click.option('--id', prompt='Chore ID', type=int)
+@click.option('--done', prompt='Mark complete? (yes/no)')
+def mark_chore(id, done):
+    """Mark a chore as complete or pending"""
+    chore = Chore.find_by_id(id)
+    if not chore:
+        click.echo(f"No chore found with ID {id}.")
+        return
+
+    done_clean = done.strip().lower()
+    if done_clean not in ['yes', 'y', 'no', 'n']:
+        click.echo("Invalid input. Please enter 'yes' or 'no'.")
+        return
+
+    chore.update_status(done_clean in ['yes', 'y'])
+    click.echo(f"Chore '{chore.title}' marked as {'complete' if chore.completed else 'pending'}.")
+
