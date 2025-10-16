@@ -257,3 +257,15 @@ def summary():
 
     total_due = sum(rb.share for bill in bills for rb in RoommateBill.all_for_bill(bill.id))
     click.echo(f"\nTotal Amount Due Across All Roommates: {total_due}")
+
+@cli_menu.command()
+@click.option('--id', prompt='Bill ID', type=int)
+def delete_bill(id):
+    """Delete a bill"""
+    bill = Bill.find_by_id(id)
+    if not bill:
+        click.echo(f"No bill found with ID {id}.")
+        return
+
+    bill.delete()
+    click.echo(f"Deleted bill '{bill.name}' successfully.")
