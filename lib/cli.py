@@ -190,3 +190,26 @@ def view_bills():
             roommate = Roommate.find_by_id(rb.roommate_id)
             roommate_name = roommate.name if roommate else "Unknown"
             click.echo(f"   - {roommate_name}: {rb.share} ({rb.status})")        
+
+@cli_menu.command()
+def mark_bill():
+    """Mark a roommate's bill as paid or pending"""
+    try:
+        roommate_id = int(click.prompt("Roommate ID"))
+        bill_id = int(click.prompt("Bill ID"))
+    except ValueError:
+        click.echo("IDs must be numeric.")
+        return
+
+    rb = RoommateBill.find_by_roommate_and_bill(roommate_id, bill_id)
+    if not rb:
+        click.echo(f"No bill found for roommate ID {roommate_id} with bill ID {bill_id}.")
+        return
+
+    status = click.prompt(
+        "New status (paid/pending)",
+        type=click.Choice(["paid", "pending"], case_sensitive=False)
+    )
+
+    RoommateBill.update_status(roommate_id, bill_id, status.lower())
+    click.echo(f"Updated bill ID {bill_id} for roommate ID {roommate_id} to '{status.lower()}'.")
