@@ -81,3 +81,18 @@ def add_chore(title, roommate_id):
         click.echo(f"Chore '{title}' added to roommate '{roommate.name}'.")
     except ValueError as e:
         click.echo(f"Error: {e}")    
+
+@cli_menu.command()
+def view_chores():
+    """View all chores"""
+    chores = Chore.all()
+    if not chores:
+        click.echo("No chores found.")
+        return
+
+    click.echo("\n🧹 Chore List:")
+    for c in chores:
+        roommate = Roommate.find_by_id(c.roommate_id)
+        roommate_name = roommate.name if roommate else "Unassigned"
+        click.echo(f" - ID {c.id}: {c.title} | Assigned to: {roommate_name} | Status: {'complete' if c.completed else 'pending'}")
+                
