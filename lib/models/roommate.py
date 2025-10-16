@@ -12,7 +12,7 @@ class Roommate:
         self.name = name.strip()
         self.room_number = room_number.strip()
 
-        def save(self):
+    def save(self):
         if self.id:
             return self.update()
         try:
@@ -35,3 +35,20 @@ class Roommate:
         )
         CONN.commit()
         return self
+    
+    @classmethod
+    def all(cls):
+        rows = CURSOR.execute("SELECT * FROM roommates").fetchall()
+        return [cls(id=row[0], name=row[1], room_number=row[2]) for row in rows]
+
+    @classmethod
+    def find_by_id(cls, id):
+        row = CURSOR.execute("SELECT * FROM roommates WHERE id=?", (id,)).fetchone()
+        return cls(id=row[0], name=row[1], room_number=row[2]) if row else None
+
+    def delete(self):
+        CURSOR.execute("DELETE FROM roommates WHERE id=?", (self.id,))
+        CONN.commit()
+
+    def __repr__(self):
+        return f"<Roommate {self.id}: {self.name} (Room {self.room_number})>"

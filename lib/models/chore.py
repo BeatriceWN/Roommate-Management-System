@@ -10,7 +10,7 @@ class Chore:
         self.completed = bool(completed)
         self.roommate_id = roommate_id
 
-     def save(self):
+    def save(self):
         if self.id:
             return self.update()
 
