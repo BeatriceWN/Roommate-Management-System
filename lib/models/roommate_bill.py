@@ -1,6 +1,5 @@
 from lib.database import CURSOR, CONN
 
-
 class RoommateBill:
     """Links roommates to their share of a bill."""
 
