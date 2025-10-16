@@ -65,3 +65,18 @@ class Bill:
 def delete(self):
         CURSOR.execute("DELETE FROM bills WHERE id = ?", (self.id,))
         CONN.commit()
+
+def split_among_roommates(self):
+        """Split bill equally among all roommates."""
+        roommates = Roommate.all()
+        if not roommates:
+            raise ValueError("No roommates found to split the bill.")
+
+        if RoommateBill.all_for_bill(self.id):
+            return round(self.amount / len(roommates), 2)
+
+        share_per_person = round(self.amount / len(roommates), 2)
+        for roommate in roommates:
+            RoommateBill(roommate.id, self.id, share_per_person, "pending").save()
+
+        return share_per_person
