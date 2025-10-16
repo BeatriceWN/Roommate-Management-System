@@ -17,3 +17,19 @@ class Bill:
         self.due_date = due_date
         self.recurrence_type = recurrence_type
         self.recurrence_day = recurrence_day
+
+    def save(self):
+        CURSOR.execute(
+            "INSERT INTO bills (name, amount, due_date, recurrence_type, recurrence_day) VALUES (?, ?, ?, ?, ?)",
+            (self.name, self.amount, self.due_date, self.recurrence_type, self.recurrence_day)
+        )
+        CONN.commit()
+        self.id = CURSOR.lastrowid
+        return self
+
+    def update(self):
+        CURSOR.execute(
+            "UPDATE bills SET name=?, amount=?, due_date=?, recurrence_type=?, recurrence_day=? WHERE id=?",
+            (self.name, self.amount, self.due_date, self.recurrence_type, self.recurrence_day, self.id)
+        )
+        CONN.commit()
