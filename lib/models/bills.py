@@ -61,3 +61,7 @@ class Bill:
             recurrence_type=row[4],
             recurrence_day=row[5]
         )
+
+def delete(self):
+        CURSOR.execute("DELETE FROM bills WHERE id = ?", (self.id,))
+        CONN.commit()
