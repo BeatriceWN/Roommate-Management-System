@@ -10,5 +10,5 @@ if __name__ == "__main__":
     click.echo("\nWelcome to the Roommate Management System CLI")
     click.echo("Type --help after any command to see usage instructions.\n")
 
-    # Launch CLI
+    #launch CLI
     cli_menu()
