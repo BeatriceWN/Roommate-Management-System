@@ -32,3 +32,16 @@ def add_roommate(name, room):
         click.echo(f"Roommate '{name}' added successfully.")
     except ValueError as e:
         click.echo(f"Error: {e}")
+
+    @cli_menu.command()
+
+def view_roommates():
+    """View all roommates"""
+    roommates = Roommate.all()
+    if not roommates:
+        click.echo("No roommates found.")
+        return
+    
+    click.echo("\n Roommates List:")
+    for r in roommates:
+        click.echo(f" - {r}")    
