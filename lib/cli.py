@@ -114,3 +114,14 @@ def mark_chore(id, done):
     chore.update_status(done_clean in ['yes', 'y'])
     click.echo(f"Chore '{chore.title}' marked as {'complete' if chore.completed else 'pending'}.")
 
+@cli_menu.command()
+@click.option('--id', prompt='Chore ID', type=int)
+def delete_chore(id):
+    """Delete a chore"""
+    chore = Chore.find_by_id(id)
+    if not chore:
+        click.echo(f"No chore found with ID {id}.")
+        return
+
+    chore.delete()
+    click.echo(f"Deleted chore '{chore.title}' successfully.")   
