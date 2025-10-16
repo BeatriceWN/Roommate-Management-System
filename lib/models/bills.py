@@ -2,8 +2,11 @@ from lib.database import CURSOR, CONN
 from lib.models.roommate import Roommate
 from lib.models.roommate_bill import RoommateBill
 
+
 class Bill:
-    def __init__(self, name, amount, due_date=None, recurrence_type=None, recurrence_day=None, id=None):
+    """Represents a shared bill among roommates."""
+
+    def __init__(self, name: str, amount: float, due_date: str = None, recurrence_type: str = None, recurrence_day: int = None, id: int = None):
         if not name:
             raise ValueError("Bill name cannot be empty.")
         if amount <= 0:
@@ -19,54 +22,30 @@ class Bill:
         self.recurrence_day = recurrence_day
 
     def save(self):
+        """Save new bill to database."""
         CURSOR.execute(
             "INSERT INTO bills (name, amount, due_date, recurrence_type, recurrence_day) VALUES (?, ?, ?, ?, ?)",
-            (self.name, self.amount, self.due_date, self.recurrence_type, self.recurrence_day)
+            (self.name, self.amount, self.due_date, self.recurrence_type, self.recurrence_day),
         )
         CONN.commit()
         self.id = CURSOR.lastrowid
         return self
 
     def update(self):
+        """Update existing bill."""
         CURSOR.execute(
             "UPDATE bills SET name=?, amount=?, due_date=?, recurrence_type=?, recurrence_day=? WHERE id=?",
-            (self.name, self.amount, self.due_date, self.recurrence_type, self.recurrence_day, self.id)
+            (self.name, self.amount, self.due_date, self.recurrence_type, self.recurrence_day, self.id),
         )
         CONN.commit()
-    @classmethod
-    def all(cls):
-        rows = CURSOR.execute("SELECT * FROM bills").fetchall()
-        return [
-            cls(
-                id=row[0],
-                name=row[1],
-                amount=row[2],
-                due_date=row[3],
-                recurrence_type=row[4],
-                recurrence_day=row[5]
-            )
-            for row in rows
-        ]
+        return self
 
-    @classmethod
-    def find_by_id(cls, id):
-        row = CURSOR.execute("SELECT * FROM bills WHERE id = ?", (id,)).fetchone()
-        if not row:
-            return None
-        return cls(
-            id=row[0],
-            name=row[1],
-            amount=row[2],
-            due_date=row[3],
-            recurrence_type=row[4],
-            recurrence_day=row[5]
-        )
-
-def delete(self):
-        CURSOR.execute("DELETE FROM bills WHERE id = ?", (self.id,))
+    def delete(self):
+        """Delete this bill and associated roommate bills."""
+        CURSOR.execute("DELETE FROM bills WHERE id=?", (self.id,))
         CONN.commit()
 
-def split_among_roommates(self):
+    def split_among_roommates(self):
         """Split bill equally among all roommates."""
         roommates = Roommate.all()
         if not roommates:
@@ -80,3 +59,23 @@ def split_among_roommates(self):
             RoommateBill(roommate.id, self.id, share_per_person, "pending").save()
 
         return share_per_person
+
+    @classmethod
+    def all(cls):
+        """Return all bills."""
+        rows = CURSOR.execute("SELECT * FROM bills").fetchall()
+        return [
+            cls(id=row[0], name=row[1], amount=row[2], due_date=row[3], recurrence_type=row[4], recurrence_day=row[5])
+            for row in rows
+        ]
+
+    @classmethod
+    def find_by_id(cls, id: int):
+        """Find bill by ID."""
+        row = CURSOR.execute("SELECT * FROM bills WHERE id=?", (id,)).fetchone()
+        if not row:
+            return None
+        return cls(id=row[0], name=row[1], amount=row[2], due_date=row[3], recurrence_type=row[4], recurrence_day=row[5])
+
+    def __repr__(self):
+        return f"<Bill {self.id}: {self.name} | Amount: {self.amount} | Due: {self.due_date}>"

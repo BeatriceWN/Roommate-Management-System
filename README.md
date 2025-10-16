@@ -1,242 +1,220 @@
-````markdown
+
+---
+
 # Roommate Management System CLI
 
-A command-line application to manage roommates, chores, and bills using Python and SQLite.  
-This project demonstrates manual ORM-style classes, CRUD operations, and database interactions without external ORM libraries.
+A command-line application for managing roommates, chores, and shared bills.
+Built with **Python**, **SQLite**, and **Click**, it helps track responsibilities and payments in a shared living space.
 
 ---
 
-##   Installation
+## Features
 
-1. Clone the repository:
+### Roommate Management
 
-```bash
-git clone https://github.com/BeatriceWN/Roommate-Management-System.git
-cd Roommate-Management-System
-````
+* Add, view, and delete roommates
+* Each roommate has a unique room number
 
-2. Create and activate a virtual environment:
+### Chore Tracking
 
-```bash
-python3 -m venv venv
-source venv/bin/activate   # macOS/Linux
-venv\Scripts\activate      # Windows
-```
+* Assign chores to roommates
+* Mark chores as complete or pending
+* View all chores and their statuses
 
-3. Install dependencies:
+### Bill Management
 
-```bash
-pip install click
-```
+* Add and view bills with optional recurrence details
+* Split bills equally among roommates automatically or manually
+* Track payment statuses per roommate
+* Delete bills and their related records safely
 
 ---
 
-##   Running the Application
+## Installation
 
-1. Launch the CLI:
+1. **Clone the repository**
 
-```bash
-python3 main.py
-```
+   ```bash
+   git clone https://github.com/BeatriceWN/Roommate-Management-System
+   cd Roommate-Management-System
+   ```
 
-2. Available commands:
+2. **Create and activate a virtual environment**
 
-### Roommates
+   ```bash
+   python -m venv venv
+   source venv/bin/activate   # macOS/Linux
+   venv\Scripts\activate      # Windows
+   ```
 
-* Add a roommate: `add-roommate`
-* View all roommates: `view-roommates`
-* Delete a roommate: `delete-roommate`
+3. **Install dependencies**
 
-### Chores
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-* Add a chore: `add-chore`
-* View all chores: `view-chores`
-* Mark chore complete/pending: `mark-chore`
-* Delete a chore: `delete-chore`
+4. **Run the application**
 
-### Bills
-
-* Add a bill: `add-bill`
-* View bills and payments: `view-bills`
-* Mark a roommate's bill as paid/pending: `mark-bill`
-* Delete a bill: `delete-bill`
-
-### Summary
-
-* View system summary: `summary`
+   ```bash
+   python main.py
+   ```
 
 ---
 
-##   Example Workflows
+## Usage
 
-### 1. Add Roommates
+After running `python main.py`, you will see:
 
-```bash
-$ python3 main.py add-roommate
-Roommate name: Beatrice Wambui
-Room number: RM1
-Roommate 'Beatrice Wambui' added successfully.
-
-$ python3 main.py add-roommate
-Roommate name: Nancy Adelice
-Room number: RM2
-Roommate 'Nancy Adelice' added successfully.
-
-$ python3 main.py add-roommate
-Roommate name: Jason Munene
-Room number: RM3
-Roommate 'Jason Munene' added successfully.
-
-$ python3 main.py add-roommate
-Roommate name: Bernice Maria
-Room number: RM-4
-Roommate 'Bernice Maria' added successfully.
-
-$ python3 main.py add-roommate
-Roommate name: Martin King
-Room number: RM-5
-Roommate 'Martin King' added successfully.
+```
+Welcome to the Roommate Management System CLI
+Type --help after any command to see usage instructions.
 ```
 
-### 2. View Roommates
+### Roommate Commands
 
 ```bash
-$ python3 main.py view-roommates
- Roommates List:
- - <Roommate 1: Beatrice Wambui (Room RM1)>
- - <Roommate 2: Nancy Adelice (Room RM2)>
- - <Roommate 3: Jason Munene (Room RM3)>
- - <Roommate 4: Bernice Maria (Room RM-4)>
- - <Roommate 5: Martin King (Room RM-5)>
+python main.py add-roommate
+python main.py view-roommates
+python main.py delete-roommate
 ```
 
-### 3. Delete a Roommate
+### Chore Commands
 
 ```bash
-$ python3 main.py delete-roommate
-Roommate ID: 5
-Deleted roommate 'Martin King' successfully.
+python main.py add-chore
+python main.py view-chores
+python main.py mark-chore
+python main.py delete-chore
+```
+
+### Bill Commands
+
+```bash
+python main.py add-bill
+python main.py view-bills
+python main.py delete-bill
+python main.py split-bill
+python main.py view-bill-details
+python main.py update-bill-status
+```
+
+Use `--help` with any command to view its options.
+Example:
+
+```bash
+python main.py add-bill --help
 ```
 
 ---
 
-### 4. Add a Chore
+## Database Structure
 
-```bash
-$ python3 main.py add-chore
-Chore title: Clean kitchen
-Assign to roommate ID: 1
-  Chore 'Clean kitchen' added to roommate 'Beatrice Wambui'.
+The application uses SQLite, stored in `db/database.db`.
+Tables include:
 
-$ python3 main.py add-chore
-Chore title: Vacuum living room
-Assign to roommate ID: 2
-  Chore 'Vacuum living room' added to roommate 'Nancy Adelice'.
-```
+* `roommates`
+* `chores`
+* `bills`
+* `roommate_bills`
 
-### 5. View Chores
-
-```bash
-$ python3 main.py view-chores
-  Chore List:
- - ID 1: Clean kitchen | Assigned to: Beatrice Wambui | Status: pending
- - ID 2: Vacuum living room | Assigned to: Nancy Adelice | Status: pending
-```
-
-### 6. Mark Chore Complete/Pending
-
-```bash
-$ python3 main.py mark-chore
-Chore ID: 1
-Mark complete? (yes/no): yes
-Chore 'Clean kitchen' marked as complete.
-```
-
-### 7. Delete a Chore
-
-```bash
-$ python3 main.py delete-chore
-Chore ID: 2
-Deleted chore 'Vacuum living room' successfully.
-```
+Foreign keys ensure relational integrity between roommates, chores, and bills.
 
 ---
 
-### 8. Add a Bill
+## Relationships Explanation
 
-```bash
-$ python3 main.py add-bill
-Bill name: Rent
-Total amount: 150000
-Due date (optional): 2025/10/25
-Is this a recurring bill? (monthly/none) [none]: monthly
-Enter day of month due (1-31): 25
-Bill 'Rent' added and split equally: each roommate owes 30000.0.
+* A **Roommate** can have multiple **Chores**, forming a one-to-many relationship.
+* A **Bill** can be shared among multiple **Roommates**, creating a many-to-many relationship via `roommate_bills`.
+* The `roommate_bills` table tracks each person’s share and payment status.
+* Deleting a roommate automatically removes related chores and bill entries.
+* Deleting a bill also removes linked records in `roommate_bills`.
+
+This design ensures consistent and accurate data handling across all operations.
+
+---
+
+## Tech Stack
+
+* **Python 3.10+**
+* **SQLite3**
+* **Click** for CLI interface
+
+---
+
+## Example CLI Interactions
+
+### Add a roommate
+
+```
+$ python main.py add-roommate
+Roommate name: Adelice
+Room number: RM02
+Roommate 'Adelice' added successfully.
 ```
 
-### 9. View Bills
+### Add a bill with optional recurrence and auto-split
 
-```bash
-$ python3 main.py view-bills
+```
+$ python main.py add-bill
+Database tables created or verified successfully.
 
-Bill ID 1: Rent | Amount: 150000.0 | Due: 2025/10/25
-   - Beatrice Wambui: 30000.0 (pending)
-   - Nancy Adelice: 30000.0 (pending)
-   - Jason Munene: 30000.0 (pending)
-   - Bernice Maria: 30000.0 (pending)
+Bill name: WiFi
+Total amount: 5000
+Due date (YYYY-MM-DD): 2025-10-25
+Recurrence type (optional, choose from: daily, weekly, monthly, yearly) []: monthly
+Recurrence day (1-31, optional): 27
+Bill 'WiFi' added successfully with ID 2.
+
+Do you want to split this bill among all roommates now? (yes/no) [yes]: yes
+Bill 'WiFi' split successfully. Each roommate owes 1250.0.
 ```
 
-### 10. Mark a Bill Paid/Pending
+### Split an existing bill later
 
-```bash
-$ python3 main.py mark-bill
+```
+$ python main.py split-bill
+Bill ID: 2
+Bill 'Electricity' split successfully. Each roommate owes 1000.0.
+```
+
+### View all bills
+
+```
+$ python main.py view-bills
+Bills List:
+ - ID 1: Rent | Amount: 150000 | Due: 2025-10-30
+ - ID 2: WiFi | Amount: 5000 | Due: 2025-10-25
+```
+
+### View details of a bill with roommate shares
+
+```
+$ python main.py view-bill-details
+Bill ID: 1
+
+Bill 'Rent' Details:
+ - Alice: 50000.0 (pending)
+ - Bob: 50000.0 (paid)
+ - Carol: 50000.0 (pending)
+```
+
+### Update a roommate's payment status
+
+```
+$ python main.py update-bill-status
 Roommate ID: 1
 Bill ID: 1
-New status (paid/pending): paid
-Updated bill ID 1 for roommate ID 1 to 'paid'.
+New status ('paid' or 'pending'): paid
+Updated payment status to 'paid' for roommate ID 1, bill ID 1.
 ```
-
-### 11. Delete a Bill
-
-```bash
-$ python3 main.py delete-bill
-Bill ID: 1
-Deleted bill 'Rent' successfully.
-```
-
----
-
-### 12. View System Summary
-
-```bash
-$ python3 main.py summary
-Roommate Management System Summary
-
-Total Roommates: 4
- - ID 1: Beatrice Wambui | Room: RM1
- - ID 2: Nancy Adelice | Room: RM2
- - ID 3: Jason Munene | Room: RM3
- - ID 4: Bernice Maria | Room: RM-4
-
-Total Chores: 1
- - ID 1: Clean kitchen | Assigned to: Beatrice Wambui | Status: complete
-
-Total Bills: 0
-
-Total Amount Due Across All Roommates: 0
-```
-
----
-
-## Additional Info
-
-* SQLite database file is auto-created in `db/database.db`.
-* All models handle their own CRUD operations without external ORM libraries.
-* CLI is built using Click for prompts and input handling.
 
 ---
 
 ## Author
 
 **Beatrice Wambui**
-[GitHub](https://github.com/BeatriceWN/Roommate-Management-System)
+Software developer passionate about building efficient CLI and database-driven tools.
+
+GitHub [github.com/beatricewambui](https://github.com/BeatriceWN/Roommate-Management-System)
+
+---
