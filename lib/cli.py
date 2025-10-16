@@ -45,3 +45,15 @@ def view_roommates():
     click.echo("\n Roommates List:")
     for r in roommates:
         click.echo(f" - {r}")    
+
+@cli_menu.command()
+@click.option('--id', prompt='Roommate ID', type=int)
+def delete_roommate(id):
+    """Delete a roommate"""
+    roommate = Roommate.find_by_id(id)
+    if not roommate:
+        click.echo(f"No roommate found with ID {id}.")
+        return
+
+    roommate.delete()
+    click.echo(f"Deleted roommate '{roommate.name}' successfully.")
