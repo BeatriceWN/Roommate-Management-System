@@ -28,3 +28,28 @@ class RoommateBill:
         CONN.commit()
         self.id = CURSOR.lastrowid
         return self
+
+@classmethod
+    def update_status(cls, roommate_id, bill_id, new_status):
+        if new_status not in cls.VALID_STATUSES:
+            raise ValueError(f"Status must be one of {cls.VALID_STATUSES}")
+        CURSOR.execute(
+            "UPDATE roommate_bills SET status=? WHERE roommate_id=? AND bill_id=?",
+            (new_status, roommate_id, bill_id)
+        )
+        CONN.commit()
+
+    @classmethod
+    def all_for_bill(cls, bill_id):
+        rows = CURSOR.execute("SELECT * FROM roommate_bills WHERE bill_id=?", (bill_id,)).fetchall()
+        return [cls(id=row[0], roommate_id=row[1], bill_id=row[2], share=row[3], status=row[4]) for row in rows]
+
+    @classmethod
+    def find_by_roommate_and_bill(cls, roommate_id, bill_id):
+        row = CURSOR.execute(
+            "SELECT * FROM roommate_bills WHERE roommate_id=? AND bill_id=?",
+            (roommate_id, bill_id)
+        ).fetchone()
+        if not row:
+            return None
+        return cls(id=row[0], roommate_id=row[1], bill_id=row[2], share=row[3], status=row[4])
