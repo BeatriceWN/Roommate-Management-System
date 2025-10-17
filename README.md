@@ -2,9 +2,45 @@
 ---
 
 # Roommate Management System CLI
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python Version](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/) 
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/BeatriceWN/Roommate-Management-System)
 
 A command-line application for managing roommates, chores, and shared bills.
 Built with **Python**, **SQLite**, and **Click**, it helps track responsibilities and payments in a shared living space.
+
+
+A command-line application for managing roommates, chores, and shared bills.
+Built with **Python**, **SQLite**, and **Click**, it helps track responsibilities and payments in a shared living space.
+
+---
+
+## Learning Goals
+
+This project demonstrates proficiency in Python programming, relational databases, and application structure through the following goals:
+
+* Apply Object-Oriented Programming principles to design maintainable code.
+* Implement CRUD operations using Python’s built-in `sqlite3` module.
+* Design and manage relational database schemas without external ORM libraries.
+* Establish and maintain one-to-many and many-to-many relationships between tables.
+* Build a modular command-line interface using the `Click` library for smooth user interaction.
+* Enforce data integrity and handle input validation within the application.
+* Practice version control using Git and GitHub for project tracking and collaboration.
+
+---
+
+## Table of Contents
+
+* [Learning Goals](#learning-goals)
+* [Features](#features)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Database Structure](#database-structure)
+* [Relationships Explanation](#relationships-explanation)
+* [Tech Stack](#tech-stack)
+* [Example CLI Interactions](#example-cli-interactions)
+* [Author](#author)
+* [License](#license)
 
 ---
 
@@ -215,6 +251,13 @@ Updated payment status to 'paid' for roommate ID 1, bill ID 1.
 **Beatrice Wambui**
 Software developer passionate about building efficient CLI and database-driven tools.
 
-GitHub [github.com/beatricewambui](https://github.com/BeatriceWN/Roommate-Management-System)
+GitHub: [github.com/BeatriceWN/Roommate-Management-System](https://github.com/BeatriceWN/Roommate-Management-System)
+
+---
+
+## License
+
+This project is licensed under the **MIT License**.
+You are free to use, modify, and distribute this software for personal or commercial purposes, provided that proper credit is given to the original author.
 
 ---

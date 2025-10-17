@@ -1,14 +1,16 @@
 import sqlite3
 
+# Establish a connection to the database and enable foreign keys
 CONN = sqlite3.connect("db/database.db")
 CONN.execute("PRAGMA foreign_keys = ON;")
 CURSOR = CONN.cursor()
 
 
 def create_tables():
-    """Create tables for roommates, chores, bills, and roommate_bills"""
+    """Create all required tables for the Roommate Management System."""
 
     try:
+        # Table: roommates
         CURSOR.execute("""
             CREATE TABLE IF NOT EXISTS roommates (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,6 +19,7 @@ def create_tables():
             )
         """)
 
+        # Table: chores
         CURSOR.execute("""
             CREATE TABLE IF NOT EXISTS chores (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,6 +30,7 @@ def create_tables():
             )
         """)
 
+        # Table: bills
         CURSOR.execute("""
             CREATE TABLE IF NOT EXISTS bills (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,6 +42,7 @@ def create_tables():
             )
         """)
 
+        # Table: roommate_bills (join table for roommates and bills)
         CURSOR.execute("""
             CREATE TABLE IF NOT EXISTS roommate_bills (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -51,8 +56,8 @@ def create_tables():
             )
         """)
 
+        # Commit all changes to the database
         CONN.commit()
-        print("Database tables created or verified successfully.")
 
     except sqlite3.Error as e:
         print(f"Error creating tables: {e}")
@@ -60,16 +65,8 @@ def create_tables():
 
 
 def close_connection():
-    """Safely close the database connection."""
+    """Close the database connection safely."""
     try:
-        if CONN:
-            CONN.close()
-            print("Database connection closed.")
+        CONN.close()
     except sqlite3.Error as e:
         print(f"Error closing connection: {e}")
-
-
-if __name__ == "__main__":
-    create_tables()
-    close_connection()
-
